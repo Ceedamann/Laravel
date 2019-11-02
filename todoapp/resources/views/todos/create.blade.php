@@ -8,8 +8,18 @@
 <div class="col-md-8">
 
 <div class="card card-default">
-<div class="card-header">Create mew todo</div>
+<div class="card-header">Create new todo</div>
 <div class="card-body">
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="list-group">
+            @foreach ($errors->all() as $error)
+                <li class= "list-group">{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <form action="/store-todos" method="POST">
 @csrf
 <div class="form-group">
