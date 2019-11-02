@@ -10,9 +10,9 @@ class TodosController extends Controller
     // $todos= Todo::all();
        return view("todos.index")->with('todos', Todo::all());
    }
-   public function show($todoId){
+   public function show(Todo $todo){
  
-      $todo = Todo::find($todoId);
+      // $todo = Todo::find($todoId);
       return view('todos.show')->with('todo', $todo);
    }
    public function create(){
@@ -23,7 +23,7 @@ class TodosController extends Controller
    public function store(){   
       
       $this->validate(request(),[
-         'name' => 'required|min:6|max:12',
+         'name' => 'required|min:6|max:20',
          'description'=>'required'
       ]);
       // dd(request()->all());
@@ -33,34 +33,40 @@ class TodosController extends Controller
       $todo->description = $data['description'];
       $todo->completed = false;
       $todo->save();
+      session()->flash("success", "Todo created.");
       return redirect('/todos');
 
 
    }
-   public function edit($todoId){
-      $todo = Todo::find($todoId);
-      return view('todos.edit')->with('todo', $todo);
+   public function edit(Todo $todo){
+          return view('todos.edit')->with('todo', $todo);
    }
-   public function update($todoId){
+   public function update(Todo $todo){
       $this->validate(request(),[
          'name' => 'required|min:6|max:20',
          'description'=>'required'
       ]);
       $data = request()->all();
-      $todo= Todo::find($todoId);
       $todo->name = $data['name'];
       $todo->description = $data['description'];
       $todo->save();
+      session()->flash("success", "Todo updated.");
       return redirect('/todos');
 
    }
-   public function destroy($todoId){
-      $todo = Todo::find($todoId);
+   public function destroy(Todo $todo){
       $todo->delete();
+      session()->flash("success", "Todo deleted.");
       return redirect('/todos');
 
    }
+   public function complete(Todo $todo){
+      $todo-> completed = true;
+      $todo-> save();
+      session()->flash("success", "Good Job");
+      return redirect('/todos');
 
+   }
 }
 
 
